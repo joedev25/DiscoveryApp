@@ -24,8 +24,22 @@ class ViewController: UIViewController {
         return view
     }()
     
-    let tabbarView:TabBarView = {
+    lazy var tabbarView:TabBarView = {
         let view = TabBarView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .cyan
+        return view
+    }()
+    
+    lazy var titleView:TitleView = {
+        let view = TitleView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .cyan
+        return view
+    }()
+    
+    lazy var container:UIView = {
+        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .cyan
         return view
@@ -47,18 +61,29 @@ class ViewController: UIViewController {
         //First add the field to the parent view which is self.
         view.addSubview(searchView)
         view.addSubview(tabbarView)
+        view.addSubview(titleView)
+//        view.addSubview(container)
         
         //Second apply constraints
         searchView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         searchView.topAnchor.constraint(equalTo: view.topAnchor,constant: 40).isActive = true
-        searchView.widthAnchor.constraint(equalTo:  view.widthAnchor,multiplier: 0.8).isActive = true
+        searchView.widthAnchor.constraint(equalTo:  view.widthAnchor,multiplier: 0.9).isActive = true
         searchView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        
         tabbarView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        tabbarView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        tabbarView.leadingAnchor.constraint(equalTo:  self.view.leadingAnchor).isActive = true
-        tabbarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        tabbarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        tabbarView.leadingAnchor.constraint(equalTo:  view.leadingAnchor).isActive = true
+        tabbarView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        titleView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        titleView.topAnchor.constraint(equalTo: searchView.bottomAnchor,constant: 20).isActive = true
+        titleView.widthAnchor.constraint(equalTo:  view.widthAnchor,multiplier: 0.9).isActive = true
+        titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+//        container.topAnchor.constraint(equalTo: titleView.bottomAnchor,constant: 10).isActive = true
+//        container.bottomAnchor.constraint(equalTo: tabbarView.topAnchor,constant: -20).isActive = true
+//        container.leadingAnchor.constraint(equalTo:  view.leadingAnchor,constant: 20).isActive = true
+//        container.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
     }
 
 
