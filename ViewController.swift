@@ -24,6 +24,13 @@ class ViewController: UIViewController {
         return view
     }()
     
+    let tabbarView:TabBarView = {
+        let view = TabBarView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .cyan
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -39,6 +46,7 @@ class ViewController: UIViewController {
         
         //First add the field to the parent view which is self.
         view.addSubview(searchView)
+        view.addSubview(tabbarView)
         
         //Second apply constraints
         searchView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -46,6 +54,11 @@ class ViewController: UIViewController {
         searchView.widthAnchor.constraint(equalTo:  view.widthAnchor,multiplier: 0.8).isActive = true
         searchView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
+        
+        tabbarView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        tabbarView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        tabbarView.leadingAnchor.constraint(equalTo:  self.view.leadingAnchor).isActive = true
+        tabbarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
     }
 
 
