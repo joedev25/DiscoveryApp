@@ -62,7 +62,7 @@ class ViewController: UIViewController {
         view.addSubview(searchView)
         view.addSubview(tabbarView)
         view.addSubview(titleView)
-//        view.addSubview(container)
+        view.addSubview(container)
         
         //Second apply constraints
         searchView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -80,10 +80,10 @@ class ViewController: UIViewController {
         titleView.widthAnchor.constraint(equalTo:  view.widthAnchor,multiplier: 0.9).isActive = true
         titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-//        container.topAnchor.constraint(equalTo: titleView.bottomAnchor,constant: 10).isActive = true
-//        container.bottomAnchor.constraint(equalTo: tabbarView.topAnchor,constant: -20).isActive = true
-//        container.leadingAnchor.constraint(equalTo:  view.leadingAnchor,constant: 20).isActive = true
-//        container.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
+        container.topAnchor.constraint(equalTo: titleView.bottomAnchor,constant: 10).isActive = true
+        container.bottomAnchor.constraint(equalTo: tabbarView.topAnchor,constant: -20).isActive = true
+        container.leadingAnchor.constraint(equalTo:  view.leadingAnchor,constant: 20).isActive = true
+        container.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
     }
 
 
