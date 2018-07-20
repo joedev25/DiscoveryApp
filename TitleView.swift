@@ -14,7 +14,7 @@ class TitleView: UIView {
         let label = UILabel()
         label.text = "Discover"
         label.textColor = .black
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 24)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -22,6 +22,7 @@ class TitleView: UIView {
     lazy var filterIcon:UIImageView = {
         let icon = UIImageView()
         icon.contentMode = .scaleAspectFit
+        icon.translatesAutoresizingMaskIntoConstraints = false
         icon.image = #imageLiteral(resourceName: "filter")
         return icon
     }()
@@ -36,7 +37,18 @@ class TitleView: UIView {
     }
     
     fileprivate func setup(){
+        addSubview(title)
+        addSubview(filterIcon)
         
+        filterIcon.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        filterIcon.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        filterIcon.widthAnchor.constraint(equalTo:  self.heightAnchor,multiplier: 0.55).isActive = true
+        filterIcon.heightAnchor.constraint(equalTo: self.heightAnchor,multiplier: 0.55).isActive = true
+        
+        title.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        title.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        title.widthAnchor.constraint(equalTo:  self.widthAnchor,multiplier: 0.65).isActive = true
+        title.heightAnchor.constraint(equalTo: self.heightAnchor,multiplier: 0.65).isActive = true
     }
 }
 

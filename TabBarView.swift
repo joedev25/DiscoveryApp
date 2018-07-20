@@ -38,8 +38,8 @@ class TabBarView: UIView {
         
         self.addSubview(iconStack)
         
-        iconStack.topAnchor.constraint(equalTo: self.topAnchor,constant: 8).isActive = true
-        iconStack.bottomAnchor.constraint(equalTo: self.bottomAnchor,constant: -8).isActive = true
+        iconStack.topAnchor.constraint(equalTo: self.topAnchor,constant: 12).isActive = true
+        iconStack.bottomAnchor.constraint(equalTo: self.bottomAnchor,constant: -12).isActive = true
         iconStack.leadingAnchor.constraint(equalTo:  self.leadingAnchor,constant: 8).isActive = true
         iconStack.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -8).isActive = true
     }
