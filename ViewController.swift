@@ -11,7 +11,9 @@ import UIKit
 class ViewController: UIViewController {
 
     let cellId = "cell"
-    var images = [UIImage](){
+    let xInset:CGFloat = 30
+    
+    var destinations = [Destination](){
         didSet{
             collectionView.reloadData()
         }
@@ -53,6 +55,35 @@ class ViewController: UIViewController {
         return view
     }()
     
+    lazy var townName:UILabel = {
+        let label = UILabel()
+        label.text = "New York 1"
+        label.textColor = .black
+        label.font = UIFont.boldSystemFont(ofSize: 22)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var shortDescription:UILabel = {
+        let label = UILabel()
+        label.text = "Sample text sample samsplemmmmsadknknknda"
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 2
+        return label
+    }()
+    
+    lazy var labelsStack:UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [townName,shortDescription])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.distribution = .fillEqually
+        stack.spacing = 0
+        stack.alpha = 0
+        return stack
+    }()
+    
     
     //Here lazy var is very important because it allows us to set the
     //delegate and datasource inside the closure
@@ -76,7 +107,7 @@ class ViewController: UIViewController {
         collectionView.register(Cell.self, forCellWithReuseIdentifier: cellId)
         view.backgroundColor = .white
         setup()
-        loadImages()
+        loadDestinations()
     }
 
     override func didReceiveMemoryWarning() {
@@ -84,14 +115,15 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    private func loadImages(){
-        var localImages = [UIImage]()
+    private func loadDestinations(){
+        var localDestinations = [Destination]()
         for i in 1...11{
             let image = UIImage(named: "\(i).jpeg")
-            localImages.append(image!)
+            let dest = Destination(image: image!, townName: "New York \(i)", description: "sample description,sample description sample description")
+            localDestinations.append(dest)
         }
         
-        images =  localImages
+        destinations =  localDestinations
     }
     
     func setup() {
@@ -102,6 +134,7 @@ class ViewController: UIViewController {
         view.addSubview(titleView)
         view.addSubview(container)
         view.addSubview(collectionView)
+        container.addSubview(labelsStack)
         
         //Second apply constraints
         searchView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -125,9 +158,16 @@ class ViewController: UIViewController {
         container.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
         
         collectionView.topAnchor.constraint(equalTo: titleView.bottomAnchor,constant: 20).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: tabbarView.topAnchor,constant: -20).isActive = true
+        collectionView.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.4).isActive = true
         collectionView.leadingAnchor.constraint(equalTo:  view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        labelsStack.topAnchor.constraint(equalTo: collectionView.bottomAnchor,constant: 20).isActive = true
+        labelsStack.bottomAnchor.constraint(equalTo: container.bottomAnchor,constant: -20).isActive = true
+        labelsStack.leadingAnchor.constraint(equalTo:  container.leadingAnchor,constant: 20).isActive = true
+        labelsStack.trailingAnchor.constraint(equalTo: container.trailingAnchor).isActive = true
+        
+        
     }
 
 }
@@ -135,6 +175,41 @@ class ViewController: UIViewController {
 
 extension ViewController:UICollectionViewDelegate{
     
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let cellWidthIncludingSpacing = collectionView.frame.width - CGFloat(60) + 1
+        
+        var offset = targetContentOffset.pointee
+        
+        let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
+        
+        
+        let roundedIndex = round(index)
+        
+        offset = CGPoint(x: roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left, y: -scrollView.contentInset.top)
+        
+        targetContentOffset.pointee = offset
+        
+        let dest = destinations[Int(roundedIndex)]
+        townName.text = dest.townName
+        shortDescription.text = dest.description
+        print(roundedIndex)
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        //Note: To avoid memory leaks I use a weak reference to self
+        //That what 'weak self' means here
+        labelsStack.transform = CGAffineTransform(translationX: 0, y: 20)
+
+        UIView.animate(withDuration: 0.2) {[weak self ] in
+            self?.labelsStack.alpha = 1
+            self?.labelsStack.transform = .identity
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        labelsStack.alpha = 0
+    }
 }
 
 extension ViewController:UICollectionViewDataSource{
@@ -144,12 +219,12 @@ extension ViewController:UICollectionViewDataSource{
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return destinations.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? Cell{
-            cell.destImageView.image = images[indexPath.item]
+            cell.destImageView.image = destinations[indexPath.item].image
             return cell
         }
         
@@ -170,7 +245,7 @@ extension ViewController:UICollectionViewDelegateFlowLayout{
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
+        return UIEdgeInsets(top: 0, left: xInset, bottom: 0, right: xInset)
     }
 }
 
