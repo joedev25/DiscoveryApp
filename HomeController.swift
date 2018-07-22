@@ -214,9 +214,12 @@ extension HomeController:UICollectionViewDelegate{
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath){
+        if let cell = collectionView.cellForItem(at: indexPath) as? Cell{
             let dc = DetailsController()
             dc.transitioningDelegate = self
+            dc.imageView.image = destinations[indexPath.item].image
+            animator.initialFrame = view.convert(cell.destImageView.frame, from: cell)
+            animator.finalFrame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height * 0.4)
             present(dc, animated: true, completion: nil)
         }
     }
@@ -263,6 +266,8 @@ extension HomeController:UIViewControllerTransitioningDelegate{
  
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         animator.isPresenting = true
+        
+        
         return animator
     }
     
@@ -270,8 +275,6 @@ extension HomeController:UIViewControllerTransitioningDelegate{
         animator.isPresenting = false
         return animator
     }
-    
-    
 }
 
 

@@ -12,6 +12,8 @@ import UIKit
 class Animator: NSObject,UIViewControllerAnimatedTransitioning {
     
     var isPresenting:Bool?
+    var initialFrame:CGRect?
+    var finalFrame:CGRect?
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 1
@@ -26,18 +28,30 @@ class Animator: NSObject,UIViewControllerAnimatedTransitioning {
         
         
         //Making sure that isPresenting field is set
-        guard let isPresenting = self.isPresenting else {
+        guard let isPresenting = self.isPresenting,
+            let initialFrame = self.initialFrame,
+            let finalFrame = self.finalFrame else {
             return
         }
         
         
         //Defining details and home viewController
-        guard let detailsController = isPresenting ? toViewController : fromViewController as? DetailsController else { return }
+        guard let detailsController = isPresenting
+            ? toViewController as? DetailsController
+            : fromViewController  as? DetailsController else { return }
         
-        guard let homeController = isPresenting ? fromViewController : toViewController as? HomeController else { return }
+        guard let homeController = isPresenting
+            ? fromViewController as? HomeController
+            : toViewController as? HomeController else { return }
         
         if isPresenting{
-            detailsController.view.alpha = 0
+            detailsController.imageView.bounds = initialFrame
+            detailsController.imageView.center =  CGPoint(x: initialFrame.midX, y: initialFrame.midY)
+            detailsController.imageView.layer.cornerRadius = 10
+            //TODO:-to be changed
+            homeController.view.alpha =  1
+            detailsController.townName.alpha = 0
+            detailsController.fullDescription.alpha =  0
         }
         
         containerView.backgroundColor = .white
@@ -45,7 +59,19 @@ class Animator: NSObject,UIViewControllerAnimatedTransitioning {
         containerView.bringSubview(toFront: detailsController.view)
         
         UIView.animate(withDuration: transitionDuration(using: ctx), animations: {
-            detailsController.view.alpha = isPresenting ? 1 : 0
+            //Animatable Properties
+            //https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreAnimation_guide/AnimatableProperties/AnimatableProperties.html
+            detailsController.imageView.bounds = isPresenting ? finalFrame : initialFrame
+            
+            detailsController.imageView.center = isPresenting ? CGPoint(x: finalFrame.midX, y: finalFrame.midY) : CGPoint(x: initialFrame.midX, y: initialFrame.midY)
+            
+            detailsController.imageView.layer.cornerRadius = isPresenting ? 0 : 10
+            //TODO:-to be changed
+            homeController.view.alpha = isPresenting ? 0 : 1
+            detailsController.townName.alpha = isPresenting ? 1 : 0
+            detailsController.fullDescription.alpha = isPresenting ? 1 : 0
+
+            
         }) { success in
             ctx.completeTransition(!ctx.transitionWasCancelled)
         }
