@@ -8,10 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class HomeController: UIViewController {
 
     let cellId = "cell"
     let xInset:CGFloat = 30
+    let animator = Animator()
     
     var destinations = [Destination](){
         didSet{
@@ -173,7 +174,7 @@ class ViewController: UIViewController {
 }
 
 
-extension ViewController:UICollectionViewDelegate{
+extension HomeController:UICollectionViewDelegate{
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let cellWidthIncludingSpacing = collectionView.frame.width - CGFloat(60) + 1
@@ -210,9 +211,18 @@ extension ViewController:UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         labelsStack.alpha = 0
     }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath){
+            let dc = DetailsController()
+            dc.transitioningDelegate = self
+            present(dc, animated: true, completion: nil)
+        }
+    }
 }
 
-extension ViewController:UICollectionViewDataSource{
+extension HomeController:UICollectionViewDataSource{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -233,7 +243,7 @@ extension ViewController:UICollectionViewDataSource{
 }
 
 
-extension ViewController:UICollectionViewDelegateFlowLayout{
+extension HomeController:UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width - CGFloat(60),
@@ -249,7 +259,20 @@ extension ViewController:UICollectionViewDelegateFlowLayout{
     }
 }
 
-
+extension HomeController:UIViewControllerTransitioningDelegate{
+ 
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        animator.isPresenting = true
+        return animator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        animator.isPresenting = false
+        return animator
+    }
+    
+    
+}
 
 
 

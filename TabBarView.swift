@@ -12,7 +12,7 @@ class TabBarView: UIView {
     
     let icons:[UIImage] = [#imageLiteral(resourceName: "explore"),#imageLiteral(resourceName: "bookmark"),#imageLiteral(resourceName: "drafts"),#imageLiteral(resourceName: "settings")]
     
-    lazy var iconStack:UIStackView = {
+    lazy var buttonStack:UIStackView = {
         let stack = UIStackView(arrangedSubviews: [])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
@@ -25,7 +25,7 @@ class TabBarView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        addIcons()
+        createButtonItems()
 
     }
     
@@ -36,19 +36,19 @@ class TabBarView: UIView {
     
     fileprivate func setup(){
         
-        self.addSubview(iconStack)
+        self.addSubview(buttonStack)
         
-        iconStack.topAnchor.constraint(equalTo: self.topAnchor,constant: 12).isActive = true
-        iconStack.bottomAnchor.constraint(equalTo: self.bottomAnchor,constant: -12).isActive = true
-        iconStack.leadingAnchor.constraint(equalTo:  self.leadingAnchor,constant: 8).isActive = true
-        iconStack.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -8).isActive = true
+        buttonStack.topAnchor.constraint(equalTo: self.topAnchor,constant: 12).isActive = true
+        buttonStack.bottomAnchor.constraint(equalTo: self.bottomAnchor,constant: -12).isActive = true
+        buttonStack.leadingAnchor.constraint(equalTo:  self.leadingAnchor,constant: 8).isActive = true
+        buttonStack.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -8).isActive = true
     }
     
-    fileprivate func addIcons() {
+    fileprivate func createButtonItems() {
         for icon in icons{
             let imageView = UIImageView(image: icon)
             imageView.contentMode = .scaleAspectFit
-            iconStack.addArrangedSubview(imageView)
+            buttonStack.addArrangedSubview(imageView)
         }
     }
 
